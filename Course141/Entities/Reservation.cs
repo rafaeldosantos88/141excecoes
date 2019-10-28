@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Course141.Entities.Exceptions;
 
 namespace Course141.Entities
 {
@@ -17,6 +18,10 @@ namespace Course141.Entities
 
         public Reservation(int roomNumber, DateTime checkIn, DateTime checkOut)
         {
+            if (checkOut <= checkIn)
+            {
+                throw new DomainExceptions("Erro in  reservation: check-out date must be after check-in");
+            }
             RoomNumber = roomNumber;
             CheckIn = checkIn;
             CheckOut = checkOut;
@@ -27,17 +32,33 @@ namespace Course141.Entities
             return (int)duration.TotalDays;                 //Fizemos um Casting por ser do tipo double o "TotalDays"
 
         }
+        public void UpdateDates(DateTime checkIn,DateTime checkOut)
+        {
+            DateTime now = DateTime.Now;         //Instante "atual" ou agora.Variavel chama now recebendo DateTime.Now
+            if (checkIn < now || checkOut < now)  //Agora vou testar se o valor que digitei de checkIn(Entrada) for menor doque now(agora)ou valor checkOut for menor doque agora,Então essa data não pode ser alterada
+            {
+               throw new DomainExceptions("Erro Reservation ");//Vai dar erro na reserva,tem ser datas futuras.Comando throw serve para lança uma instancia de DomainExecption
+
+            }
+             if (checkOut <= checkIn)
+            {
+               throw new DomainExceptions( "Erro in  reservation: check-out date must be after check-in");
+            }
+            CheckIn = checkIn;
+            CheckOut = checkOut;
+   
+        }
         public override string ToString()
         {
             return " Room "
                 + RoomNumber                        //Concatenei com numero do quarto ou número da reserva
                 + ", check-in: "                   //Entrada
                 + CheckIn.ToString("dd/MM/yyyy")
-                + ", check-out : "                
+                + ", check-out : "
                 + CheckOut.ToString("dd/MM/yyyy")
                 + " , "
                 + Duration()
-                + " Nights"                     //Tantas Noites
+                + " Nights";                   //Tantas Noites
         }
     }
 }
